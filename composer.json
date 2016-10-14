@@ -1,0 +1,23 @@
+{
+  "name": "zephia/laravel-mercadolibre",
+  "description": "Laravel wrapper for the MercadoLibre API Client",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mauro Moreno",
+      "email": "moreno.mauro.emanuel@gmail.com"
+    }
+  ],
+  "require": {
+    "zephia/mercadolibre": "^0.0.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Zephia\\LaravelMercadoLibre\\": "src"
+    }
+  },
+  "require-dev": {
+    "illuminate/support": "^5.3"
+  }
+}
