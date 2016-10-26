@@ -32,7 +32,7 @@ MERCADOLIBRE=YOUR-MERCADOLIBRE-APP-KEY
 ```
 
 ## Usage
-### Create and store lead
+### Get user data
 
 See fields documentation at [official MercadoLibre API reference](http://developers.mercadolibre.com/api-docs/)
 
