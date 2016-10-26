@@ -3,6 +3,8 @@ This package is a wrapper of [MercadoLibre API Client PHP Class](https://github.
 
 ## Installation
 
+Using [composer](http://getcomposer.org)
+
 Run the following command and provide the latest stable version:
 
 ```bash
