@@ -1,8 +1,4 @@
 # Laravel MercadoLibre API Client
-Laravel wrapper of the MercadoLibre API Client
-
-
-# laravel-pilot
 This package is a wrapper of [MercadoLibre API Client PHP Class](https://github.com/zephia/mercadolibre) for Laravel Framework.
 
 ## Installation
