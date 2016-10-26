@@ -40,7 +40,7 @@ See fields documentation at [official MercadoLibre API reference](http://develop
 <?php
 
 /**
- * Create Item
+ * User Show
  */
 
 $user = app('ml_api')->userShow('MLA123456789');
