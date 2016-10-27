@@ -27,10 +27,11 @@ Publish config file:
 php artisan vendor:publish --provider="Zephia\LaravelMercadoLibre\MercadoLibreServiceProvider" --tag="config"
 ```
 
-Add **MERCADOLIBRE_APP_KEY** constants to your .env file:
+Add **MERCADOLIBRE_APP_KEY** and **MERCADOLIBRE_APP_SECRET** constants to your .env file:
 
 ```
-MERCADOLIBRE=YOUR-MERCADOLIBRE-APP-KEY
+MERCADOLIBRE_APP_KEY=YOUR-MERCADOLIBRE-APP-KEY
+MERCADOLIBRE_APP_SECRET=YOUR-MERCADOLIBRE-APP-SECRET
 ```
 
 ## Usage
@@ -45,7 +46,7 @@ See fields documentation at [official MercadoLibre API reference](http://develop
  * User Show
  */
 
-$user = app('ml_api')->userShow('MLA123456789');
+$user = app('meli_api')->userShow('MLA123456789');
 
 var_dump($user);
 

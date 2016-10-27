@@ -10,5 +10,43 @@
  */
 
 return [
-    'APP_KEY' => env('MERCADOLIBRE_APP_KEY', ''),
+
+    /*
+    |--------------------------------------------------------------------------
+    | App Key
+    |--------------------------------------------------------------------------
+    |
+    | This your app key obtained at http://applications.mercadolibre.com
+    |
+    | Default: null
+    |
+    */
+
+    'app_key' => env('MERCADOLIBRE_APP_KEY'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | App Secret
+    |--------------------------------------------------------------------------
+    |
+    | This your app key obtained at http://applications.mercadolibre.com
+    |
+    | Default: null
+    |
+    */
+
+    'app_secret' => env('MERCADOLIBRE_APP_SECRET'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Callback route controller
+    |--------------------------------------------------------------------------
+    |
+    | Defines the route controller class which handles the callback url
+    |
+    | Default: '\Zephia\LaravelMercadoLibre\Http\Controllers\CallbackController'
+    |
+    */
+
+    'callback_controller' => '\Zephia\LaravelMercadoLibre\Http\Controllers\CallbackController',
 ];
