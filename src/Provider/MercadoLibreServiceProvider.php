@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Laravel Mercado Libre API client package.
  *

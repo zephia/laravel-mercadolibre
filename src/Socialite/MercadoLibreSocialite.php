@@ -1,12 +1,27 @@
 <?php
+/*
+ * This file is part of the Laravel Mercado Libre API client package.
+ *
+ * (c) Zephia <info@zephia.com.ar>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Zephia\LaravelMercadoLibre\Socialite;
 
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\ProviderInterface;
-use GuzzleHttp\ClientInterface;
+use Zephia\MercadoLibre\Client\MercadoLibreClient;
 
-class MercadoLibreSocialite extends AbstractProvider implements ProviderInterface
+/**
+ * Class MercadoLibreSocialite
+ *
+ * @package Zephia\LaravelMercadoLibre\Socialite
+ * @author  Mauro Moreno<moreno.mauro.emanuel@gmail.com>
+ */
+class MercadoLibreSocialite extends AbstractProvider
+    implements ProviderInterface
 {
     /**
      * @var string Refresh Token
@@ -23,15 +38,21 @@ class MercadoLibreSocialite extends AbstractProvider implements ProviderInterfac
      */
     protected $parsed_response;
 
+    protected $access_token;
+
     /**
      * Get the authentication URL for the provider.
      *
-     * @param  string $state
+     * @param string $state
+     *
      * @return string
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase(MeliManager::$AUTH_URL, $state);
+        return $this->buildAuthUrlFromBase(
+            MercadoLibreClient::AUTH_URI,
+            $state
+        );
     }
 
     /**
@@ -41,45 +62,48 @@ class MercadoLibreSocialite extends AbstractProvider implements ProviderInterfac
      */
     protected function getTokenUrl()
     {
-        $token_url = MeliManager::$API_ROOT_URL . MeliManager::$OAUTH_URL;
-        return $token_url;
+        return MercadoLibreClient::BASE_URI . MercadoLibreClient::OAUTH_URI;
     }
 
     /**
      * @param string $code
+     *
      * @return array
      */
     protected function getTokenFields($code)
     {
         return [
-            'client_id' => $this->clientId, 'client_secret' => $this->clientSecret,
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
             'grant_type' => 'authorization_code',
-            'code' => $code, 'redirect_uri' => $this->redirectUrl,
+            'code' => $code,
+            'redirect_uri' => $this->redirectUrl,
         ];
     }
 
     /**
      * Get the raw user for the given access token.
      *
-     * @param  string $token
+     * @param string $token
+     *
      * @return array
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get(MeliManager::$API_ROOT_URL . '/users/me?' . http_build_query(['access_token' => $token]));
-        $output = json_decode($response->getBody(), true);
-        return $output;
+        $user = $this->getHttpClient()->userShowMe($token);
+        return json_decode(json_encode($user), true);
     }
 
     /**
      * Map the raw user array to a Socialite User instance.
      *
-     * @param  array $user
+     * @param array $user
+     *
      * @return \Laravel\Socialite\Two\User
      */
     protected function mapUserToObject(array $user)
     {
-        return (new MeliUser)->setRaw($user)->map([
+        return (new MercadoLibreUser)->setRaw($user)->map([
             'id' => $user['id'],
             'nickname' => $user['nickname'],
             'name' => trim($user['first_name'] . ' ' . $user['last_name']),
@@ -87,45 +111,50 @@ class MercadoLibreSocialite extends AbstractProvider implements ProviderInterfac
         ]);
     }
 
+    /**
+     * Get Access Token
+     *
+     * @param $code
+     *
+     * @return mixed
+     */
     public function getAccessToken($code)
     {
-        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
-        $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            'headers' => ['Accept' => 'application/json'],
-            $postKey => $this->getTokenFields($code),
-        ]);
-        return $this->parseResponse($response->getBody())->parsedAccessToken();
+        $response = $this->getHttpClient()->getGuzzleClient()
+            ->post($this->getTokenUrl(), [
+                'headers' => ['Accept' => 'application/json'],
+                'body' => $this->getTokenFields($code),
+            ]);
+
+        $data = $this->generateData($response->getBody());
+
+        $this->access_token = $data['access_token'];
+        $this->refresh_token = $data['refresh_token'];
+        $this->expires_in = $data['expires_in'];
+
+        return $this->access_token;
     }
 
-    protected function parseResponse($body)
+    /**
+     * Generate Data
+     *
+     * @param $body
+     *
+     * @return $this
+     */
+    protected function generateData($body)
     {
         $this->parsed_response = json_decode($body, true);
         return $this;
     }
 
-    protected function parsedAccessToken()
+    /**
+     * Get HTTP application
+     *
+     * @return \Illuminate\Foundation\Application|mixed
+     */
+    public function getHttpClient()
     {
-        return $this->parsed_response['access_token'];
-    }
-
-    protected function getRefreshToken()
-    {
-        return $this->parsed_response['refresh_token'];
-    }
-
-    protected function getExpiresIn()
-    {
-        return $this->parsed_response['expires_in'];
-    }
-
-    public function user()
-    {
-        if ($this->hasInvalidState()) {
-            throw new InvalidStateException;
-        }
-        $user = $this->mapUserToObject($this->getUserByToken(
-            $token = $this->getAccessToken($this->getCode())
-        ));
-        return $user->setToken($token)->setRefreshToken($this->getRefreshToken())->setExpiresIn($this->getExpiresIn());;
+        return app('meli_api');
     }
 }

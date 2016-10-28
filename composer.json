@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "zephia/mercadolibre": "^0.0.1",
+    "zephia/mercadolibre": "^0.0",
     "laravel/socialite": "^2.0"
   },
   "autoload": {
