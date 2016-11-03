@@ -120,10 +120,11 @@ class MercadoLibreSocialite extends AbstractProvider
      */
     public function getAccessToken($code)
     {
+        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'body' : 'form_params';
         $response = $this->getHttpClient()->getGuzzleClient()
             ->post($this->getTokenUrl(), [
                 'headers' => ['Accept' => 'application/json'],
-                'body' => $this->getTokenFields($code),
+                $postKey => $this->getTokenFields($code),
             ]);
 
         $data = $this->generateData($response->getBody());
