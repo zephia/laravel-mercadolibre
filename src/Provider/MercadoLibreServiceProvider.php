@@ -47,15 +47,6 @@ class MercadoLibreServiceProvider extends ServiceProvider
                 )->build();
             return new MercadoLibreClient([], $serializer);
         });
-
-        $socialite = $this->app->make('Laravel\Socialite\Contracts\Factory');
-        $socialite->extend(
-            'meli',
-            function ($app) use ($socialite) {
-                $config = config($this->packageName, []);
-                return $socialite->buildProvider(MeliSocialite::class, $config);
-            }
-        );
     }
 
     /**
