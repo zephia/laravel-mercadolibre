@@ -37,7 +37,7 @@ class MercadoLibreServiceProvider extends ServiceProvider
         $this->setupRoutes($this->app->router);
 
         $this->publishes([
-            __DIR__ . '/../config/mercadolibre.php' => config_path('mercadolibre.php'),
+            __DIR__ . '/../../config/mercadolibre.php' => config_path('mercadolibre.php'),
         ], 'config');
 
         $this->app->bind('meli_api', function () {
