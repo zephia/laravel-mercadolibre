@@ -16,7 +16,7 @@ Then register this service provider with Laravel in config/app.php:
 ```php
 'providers' => [
     ...
-    Zephia\LaravelMercadoLibre\MercadoLibreServiceProvider::class,
+    Zephia\LaravelMercadoLibre\Provider\MercadoLibreServiceProvider::class,
     ...
 ]
 ```
@@ -24,7 +24,7 @@ Then register this service provider with Laravel in config/app.php:
 Publish config file:
 
 ```bash
-php artisan vendor:publish --provider="Zephia\LaravelMercadoLibre\MercadoLibreServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Zephia\LaravelMercadoLibre\Provider\MercadoLibreServiceProvider" --tag="config"
 ```
 
 Add **MERCADOLIBRE_APP_KEY** and **MERCADOLIBRE_APP_SECRET** constants to your .env file:
